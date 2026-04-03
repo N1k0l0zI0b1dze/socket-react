@@ -8,7 +8,18 @@ export default function Rooms() {
   const [msg, setMsg] = useState("");
   const [messages, setMessages] = useState([]);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    socket.on("recieve_message", () => {
+      setMessages((prev) => [
+        ...prev,
+        { message: DataTransfer.message, self: false },
+      ]);
+
+      return () => {
+        socket.off("recieve_message");
+      };
+    });
+  }, []);
 
   const joinRoom = () => {
     if (room.trim()) {
